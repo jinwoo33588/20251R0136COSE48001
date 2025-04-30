@@ -4,6 +4,7 @@ import './App.css';
 function App() {
   const [input, setInput] = useState('');
   const [result, setResult] = useState('');
+  const [history, setHistory] = useState([]);
 
   const handleInsert = (value) => {
     setInput((prev) => prev + ' ' + value + ' ');
@@ -13,6 +14,7 @@ function App() {
     const tokens = input.trim().split(/\s+/);
     if (tokens.length < 3) {
       setResult('올바른 형식으로 입력해주세요.');
+      setHistory((prev) => [...prev, '❌ 올바른 형식으로 입력해주세요.']);
       return;
     }
 
@@ -26,6 +28,7 @@ function App() {
     }
 
     setResult(output);
+    setHistory((prev) => [...prev, `✅ ${output}`]);
   };
 
   const applyMeaning = (a, b, op) => {
@@ -48,6 +51,19 @@ function App() {
         return `${a}와 ${b}으로부터 논리적인 결론이 도출됩니다.`;
       default:
         return `${a} ${op} ${b}`;
+    }
+  };
+
+  const handleCopyResult = () => {
+    if (result) {
+      navigator.clipboard.writeText(result);
+      alert('결과가 복사되었습니다!');
+    }
+  };
+
+  const handleClearHistory = () => {
+    if (window.confirm('모든 결과 기록을 삭제하시겠습니까?')) {
+      setHistory([]);
     }
   };
 
@@ -81,6 +97,28 @@ function App() {
 
       <div className={result ? 'result-box' : 'result-box empty'}>
         {result ? result : '결과가 여기에 표시됩니다...'}
+      </div>
+
+      {result && (
+        <div className="result-buttons">
+          <button onClick={handleCopyResult} className="action-button">📋 결과 복사</button>
+          <button onClick={handleClearHistory} className="action-button danger">🗑️ 기록 초기화</button>
+        </div>
+      )}
+
+      <div className="history-box">
+        <h2>📜 결과 기록</h2>
+        <div className="history-scroll">
+          {history.length === 0 ? (
+            <p className="empty-history">이전 결과가 없습니다.</p>
+          ) : (
+            history.map((item, index) => (
+              <p key={index} className="history-item">
+                {item}
+              </p>
+            ))
+          )}
+        </div>
       </div>
     </div>
   );

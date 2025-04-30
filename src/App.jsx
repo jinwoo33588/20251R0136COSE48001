@@ -21,7 +21,6 @@ function App() {
     while (i < tokens.length - 1) {
       const op = tokens[i];
       const next = tokens[i + 1];
-
       output = applyMeaning(output, next, op);
       i += 2;
     }
@@ -53,30 +52,36 @@ function App() {
   };
 
   return (
-    <div className="app-container">
-      <h1 className="app-title">텍스트 계산기</h1>
-      <textarea
-        className="input-box"
-        placeholder="텍스트를 입력하세요..."
-        value={input}
-        onChange={(e) => setInput(e.target.value)}
-      />
-      <div className="button-grid">
-        {['+', '-', '×', '÷', '<>', '()', '→', '∴', '='].map((op, index) => (
-          <button
-            key={index}
-            className="button-primary"
-            onClick={op === '=' ? handleEvaluate : () => handleInsert(op)}
-          >
-            {op}
+    <div className="container">
+      <h1 className="title">🧠 텍스트 계산기</h1>
+
+      <div className="input-section">
+        <textarea
+          className="input-area"
+          placeholder="텍스트를 입력하세요..."
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+        />
+
+        <div className="operator-grid">
+          {['+', '-', '×', '÷', '<>', '()', '→', '∴'].map((op) => (
+            <button
+              key={op}
+              className="operator-button"
+              onClick={() => handleInsert(op)}
+            >
+              {op}
+            </button>
+          ))}
+          <button className="equal-button" onClick={handleEvaluate}>
+            =
           </button>
-        ))}
-      </div>
-      {result && (
-        <div className="result-box">
-          {result}
         </div>
-      )}
+      </div>
+
+      <div className={result ? 'result-box' : 'result-box empty'}>
+        {result ? result : '결과가 여기에 표시됩니다...'}
+      </div>
     </div>
   );
 }

@@ -33,24 +33,15 @@ function App() {
 
   const applyMeaning = (a, b, op) => {
     switch (op) {
-      case '+':
-        return `${a}와 ${b}이(가) 결합되어 새로운 의미를 형성합니다.`;
-      case '-':
-        return `${a}에서 ${b}의 개념이 제거되어 정제된 의미가 됩니다.`;
-      case '×':
-        return `${a}과 ${b}이(가) 곱해져 복합적인 의미를 가집니다.`;
-      case '÷':
-        return `${a}을(를) ${b}로 나눠 세부 요소를 분리합니다.`;
-      case '<>':
-        return `${a}과 ${b}은(는) 대조적인 개념으로 비교됩니다.`;
-      case '→':
-        return `${a}이(가) ${b}으로 변화합니다.`;
-      case '()':
-        return `${a} 안에 ${b}이(가) 부가적으로 포함됩니다.`;
-      case '∴':
-        return `${a}와 ${b}으로부터 논리적인 결론이 도출됩니다.`;
-      default:
-        return `${a} ${op} ${b}`;
+      case '+': return `${a}와 ${b}이(가) 결합되어 새로운 의미를 형성합니다.`;
+      case '-': return `${a}에서 ${b}의 개념이 제거되어 정제된 의미가 됩니다.`;
+      case '×': return `${a}과 ${b}이(가) 곱해져 복합적인 의미를 가집니다.`;
+      case '÷': return `${a}을(를) ${b}로 나눠 세부 요소를 분리합니다.`;
+      case '<>': return `${a}과 ${b}은(는) 대조적인 개념으로 비교됩니다.`;
+      case '→': return `${a}이(가) ${b}으로 변화합니다.`;
+      case '()': return `${a} 안에 ${b}이(가) 부가적으로 포함됩니다.`;
+      case '∴': return `${a}와 ${b}으로부터 논리적인 결론이 도출됩니다.`;
+      default: return `${a} ${op} ${b}`;
     }
   };
 
@@ -67,57 +58,77 @@ function App() {
     }
   };
 
+  const handleCopyItem = (text) => {
+    navigator.clipboard.writeText(text);
+    alert('복사되었습니다: ' + text);
+  };
+
+  const handleDeleteItem = (index) => {
+    setHistory((prev) => prev.filter((_, i) => i !== index));
+  };
+
   return (
     <div className="container">
-      <h1 className="title">🧠 텍스트 계산기</h1>
+      <h1 className="title">TEXT CALCULATION</h1>
 
-      <div className="input-section">
-        <textarea
-          className="input-area"
-          placeholder="텍스트를 입력하세요..."
-          value={input}
-          onChange={(e) => setInput(e.target.value)}
-        />
-
-        <div className="operator-grid">
-          {['+', '-', '×', '÷', '<>', '()', '→', '∴'].map((op) => (
-            <button
-              key={op}
-              className="operator-button"
-              onClick={() => handleInsert(op)}
-            >
-              {op}
-            </button>
-          ))}
-          <button className="equal-button" onClick={handleEvaluate}>
-            =
-          </button>
+      <div className="main-section">
+        <div className="history-box">
+          <h2>📜 결과 기록
+          <div className="result-buttons">
+              <button onClick={handleCopyResult} className="action-button">📋 결과 복사</button>
+              <button onClick={handleClearHistory} className="action-button danger">🗑️ 기록 초기화</button>
+            </div>
+          </h2>
+          <div className="history-scroll">
+            {history.length === 0 ? (
+              <p className="empty-history">이전 결과가 없습니다.</p>
+            ) : (
+              history.map((item, index) => (
+                <div key={index} className="history-item">
+                  <span>{item}</span>
+                  <div className="history-buttons">
+                    <button onClick={() => handleCopyItem(item)} className="mini-button">📋</button>
+                    <button onClick={() => handleDeleteItem(index)} className="mini-button danger">❌</button>
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
         </div>
-      </div>
 
-      <div className={result ? 'result-box' : 'result-box empty'}>
-        {result ? result : '결과가 여기에 표시됩니다...'}
-      </div>
+        <div className="right-box">
+          <textarea
+            className="input-area"
+            placeholder="텍스트를 입력하세요..."
+            value={input}
+            onChange={(e) => setInput(e.target.value)}
+          />
 
-      {result && (
-        <div className="result-buttons">
-          <button onClick={handleCopyResult} className="action-button">📋 결과 복사</button>
-          <button onClick={handleClearHistory} className="action-button danger">🗑️ 기록 초기화</button>
-        </div>
-      )}
+          <div className={result ? 'result-box' : 'result-box empty'}>
+            {result ? result : '결과가 여기에 표시됩니다...'}
+          </div>
 
-      <div className="history-box">
-        <h2>📜 결과 기록</h2>
-        <div className="history-scroll">
-          {history.length === 0 ? (
-            <p className="empty-history">이전 결과가 없습니다.</p>
-          ) : (
-            history.map((item, index) => (
-              <p key={index} className="history-item">
-                {item}
-              </p>
-            ))
+          {result && (
+            <div className="result-buttons">
+              <button onClick={handleCopyResult} className="action-button">📋 결과 복사</button>
+              <button onClick={handleClearHistory} className="action-button danger">🗑️ 기록 초기화</button>
+            </div>
           )}
+
+          <div className="operator-grid">
+            {['+', '-', '×', '÷', '<>', '()', '→', '∴'].map((op) => (
+              <button
+                key={op}
+                className="operator-button"
+                onClick={() => handleInsert(op)}
+              >
+                {op}
+              </button>
+            ))}
+            <button className="equal-button" onClick={handleEvaluate}>
+              =
+            </button>
+          </div>
         </div>
       </div>
     </div>

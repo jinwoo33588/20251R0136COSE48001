@@ -28,7 +28,7 @@ function App() {
     }
   };
 
-  const callOpenAI = async (inputText) => {
+  /*const callOpenAI = async (inputText) => {
     console.log("📤 OpenAI 요청 내용:", inputText);
     try {
       const response = await fetch('https://api.openai.com/v1/chat/completions', {
@@ -66,7 +66,7 @@ function App() {
       console.error('❌ OpenAI API 오류:', err);
       return null;
     }
-  };
+  };*/
 
   const handleCopyResult = () => {
     if (result) {

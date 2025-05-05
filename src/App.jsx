@@ -6,9 +6,12 @@ function App() {
   const [result, setResult] = useState('');
   const [history, setHistory] = useState([]);
 
+  /*입력*/
   const handleInsert = (value) => {
     setInput((prev) => prev + ' ' + value + ' ');
   };
+
+  /*임시 실행 결과 */
   const handleEvaluate = () => {
     const tokens = input.trim().split(/\s+/);
     if (tokens.length < 3) {
@@ -44,7 +47,8 @@ function App() {
     }
   };
 
-  /*const handleEvaluate = async () => {
+  /* api 연동 결과
+  const handleEvaluate = async () => {
     if (!input.trim()) {
       setResult('입력값이 없습니다.');
       return;

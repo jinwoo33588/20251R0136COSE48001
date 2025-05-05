@@ -5,7 +5,7 @@ body {
 }
 
 .container {
-  max-width: 1280px;
+  max-width: 1280px; /*화면 전체 크기*/
   margin: 0 auto;
   padding: 0rem;
 }
@@ -26,28 +26,21 @@ body {
   align-items: stretch;
 }
 
-/* 오른쪽 (입력/결과/버튼) */
-.right-panel {
-  display: flex;
-  flex-direction: column;
-  gap: 0.0rem;
-  width: 40%;
-}
 
-/* 왼쪽 (히스토리) */
+
+/* -------왼쪽 (히스토리)-------- */
 .history-box {
   width: 40%;
-  padding: 1.5rem;
+  padding: 0rem;
   background-color: #F0F0F3;
   border: 1px solid #e5e7eb;
   border-radius: 0rem;
 }
-
-
+/*스크롤기능*/
 .history-scroll {
   max-height: 100vh;
   overflow-y: auto;
-  padding-right: 1rem;
+  padding-left: 0rem;
 
    /* 스크롤바 숨기기 (크로스브라우저 대응) */
    scrollbar-width: none;        /* Firefox */
@@ -61,13 +54,13 @@ body {
   color: #9ca3af;
   text-align: center;
 }
-
+/*각 history*/
 .history-item {
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: 0.5rem 0;
-  border-bottom: 1px solid #e5e7eb;
+  border-bottom: 0px solid #e5e7eb; /*경계선(*/
   font-size: 1rem;
   color: #000000;
   
@@ -77,7 +70,12 @@ body {
   background-color: #E9E9EC; /* 살짝 밝은 회색 배경 */
   cursor: pointer;           /* 커서 모양을 손가락으로 변경 */
 }
+.history-text {
+  padding-left: 31px; /* 원하는 만큼 좌측 여백 */
+  flex-grow: 1;       /* 버튼 영역을 제외하고 가능한 공간 차지 */
+}
 
+/*history 안에 있는 버튼들 전부 (현재는 일단 삭제버튼만 있음)*/
 .history-buttons {
   display: none; /* 기본 상태에서는 숨김 */
   gap: 0.25rem;
@@ -86,18 +84,27 @@ body {
   display: flex; /* hover 시 보이게 함 */
 }
 /*삭제버튼*/
-.mini-button {
+.delete-button {
   background-color:transparent;
   color: #374151;
   border: none;
-  padding: 0.25rem 0.5rem;
+  padding: 0.25rem 1rem;
   font-size: 0.85rem;
   border-radius: 0.375rem;
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
 
-/*계산기모양*/
+
+/*------- 오른쪽 (입력/결과/버튼)-------- */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 0.0rem;
+  width: 40%;
+}
+
+  /*계산기모양*/
 .panel-box {
   background-color: #1f1f1f; /* 진한 검정 배경 */
   padding: 1rem;
@@ -111,7 +118,7 @@ body {
 }
 
 
-/* 입력창 */
+  /* 입력창 */
 .input-area {
   height: 200px;
   background-color: #ffffff;
@@ -120,7 +127,7 @@ body {
   padding: 1.5rem;
   font-size: 1.125rem;
   resize: none;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);
+  /*box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);*/
   outline: none;
   width: 100%;
   box-sizing: border-box;
@@ -128,15 +135,15 @@ body {
   border-bottom-right-radius: 0;
   margin: 0; 
 }
-
+/*
 .input-area:focus {
   border-color: #3b82f6;
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
-}
+}*/
 
-/* 결과창 */
+  /* 결과창 */
 .result-box {
-  background-color: #f9fafb;
+  background-color: #FAFAFA;
   border: 1px solid #e5e7eb;
   border-radius: 1rem;
   border-top-left-radius: 0;     /* 위쪽 모서리 제거 */
@@ -145,7 +152,7 @@ body {
   min-height: 100px;
   font-size: 1.125rem;
   color: #374151;
-  box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);
+  /*box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);*/ 
   width: 100%;
   box-sizing: border-box;
   margin: 0;
@@ -157,7 +164,7 @@ body {
   text-align: center;
 }
 
-/* 버튼들 */
+  /* 연산자 버튼들 */
 .operator-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 3열 */
@@ -168,14 +175,13 @@ body {
   margin-bottom: auto;   /* 아래쪽 공간도 자동으로 채움 */
 }
 
-
 .operator-button {
   background-color: #ffffff;
   color: black;
-  font-size: 1.125rem;
+  font-size: 2rem;
   font-weight: bold;
-  width: 60px;
-  height: 60px;
+  width: 80px;
+  height: 80px;
   border: none;
   border-radius: 50%;
   transition: transform 0.2s ease;
@@ -186,24 +192,27 @@ body {
 }
 
 .operator-button:hover {
-  background-color: #D1D1D1;
+  background-color: rgba(255, 255, 255, 0.8);
   transform: scale(1.05);
 }
 
 .equal-button {
-  grid-column: span 3;
-  background-color: #10b981;
+  background-color: rgba(255, 255, 255, 0.3);
   color: white;
-  font-size: 1.125rem;
+  font-size: 2rem;
   font-weight: bold;
-  padding: 1rem;
+  width: 80px;
+  height: 80px;
   border: none;
-  border-radius: 0.75rem;
+  border-radius: 50%;
   transition: transform 0.2s ease;
   cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .equal-button:hover {
-  background-color: #059669;
+  background-color: rgba(255, 255, 255, 0.1);
   transform: scale(1.05);
 }

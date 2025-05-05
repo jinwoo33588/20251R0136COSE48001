@@ -13,13 +13,13 @@ function App() {
 
   /*임시 실행 결과 */
   const handleEvaluate = () => {
-    const tokens = input.trim().split(/\s+/);
-    if (tokens.length < 3) {
-      setResult('올바른 형식으로 입력해주세요.');
-      setHistory((prev) => [...prev, '❌ 올바른 형식으로 입력해주세요.']);
-      return;
+    if (!input.trim()) {
+      setResult('입력값이 없습니다.');
+      return; // 빈 입력이면 history에 아무것도 저장하지 않음
     }
-
+  
+    const tokens = input.trim().split(/\s+/);
+  
     let output = tokens[0];
     let i = 1;
     while (i < tokens.length - 1) {
@@ -28,10 +28,11 @@ function App() {
       output = applyMeaning(output, next, op);
       i += 2;
     }
-
+  
     setResult(output);
     setHistory((prev) => [...prev, ` ${output}`]);
   };
+  
 
   const applyMeaning = (a, b, op) => {
     switch (op) {
@@ -106,14 +107,6 @@ function App() {
     }
   };
   */
-
-  const handleCopyResult = () => {
-    if (result) {
-      navigator.clipboard.writeText(result);
-      alert('결과가 복사되었습니다!');
-    }
-  };
-
   const handleClearHistory = () => {
     if (window.confirm('모든 결과 기록을 삭제하시겠습니까?')) {
       setHistory([]);
@@ -124,10 +117,11 @@ function App() {
     navigator.clipboard.writeText(text);
     alert('복사되었습니다: ' + text);
   };
-
+  /*기록 삭제 */
   const handleDeleteItem = (index) => {
     setHistory((prev) => prev.filter((_, i) => i !== index));
   };
+
   /*드래그 기능 */
    // 드래그 시작할 때 실행
   const handleDragStart = (e, text) => {
@@ -151,7 +145,6 @@ function App() {
       <div className="main-section">
 
         <div className="history-box">
-         
           <div className="history-scroll">
             {history.length === 0 ? (
               <p className="empty-history">이전 결과가 없습니다.</p>
@@ -160,10 +153,11 @@ function App() {
                 <div key={index} className="history-item"
                 draggable
                 onDragStart={(e) => handleDragStart(e, item)}>
-                  <span>{item}</span>
+                  {/*<span>{item}</span>*/}
+                  <div className="history-text">{item}</div> {/* padding 부여 */}
                   <div className="history-buttons">
-                    {/*<button onClick={() => handleCopyItem(item)} className="mini-button">📋</button>*/}
-                    <button onClick={() => handleDeleteItem(index)} className="mini-button danger"> X </button>
+                    {/*<button onClick={() => handleCopyItem(item)} className="mini-button">📋복사</button>*/}
+                    <button onClick={() => handleDeleteItem(index)} className="delete-button danger"> X </button>
                   </div>
                 </div>
               ))
@@ -188,15 +182,16 @@ function App() {
           </div>
 
           <div className="operator-grid">
-            {['+', '-', '×', '÷', '<>', '()', '→', '∴', '='].map((op) => (
+          {['+', '-', '×', '÷', '<>', '()', '→', '∴', '='].map((op) => (
             <button
               key={op}
-              className="operator-button"
+              className={op === '=' ? 'equal-button' : 'operator-button'}
               onClick={() => op === '=' ? handleEvaluate() : handleInsert(op)}
             >
-              {op}
-              </button>
-            ))}
+            {op}
+            </button>
+          ))}
+
           </div>
         </div>
       </div>

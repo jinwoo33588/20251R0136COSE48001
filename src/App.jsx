@@ -124,9 +124,41 @@ function App() {
 
   /*드래그 기능 */
    // 드래그 시작할 때 실행
-  const handleDragStart = (e, text) => {
+   const handleDragStart = (e, text) => {
+    // 드래그 데이터 설정
     e.dataTransfer.setData("text/plain", text);
+  
+    // 1. 가상 엘리먼트 생성
+    const ghost = document.createElement("div");
+    ghost.textContent = text;
+    ghost.style.position = "absolute";
+    ghost.style.top = "-9999px";
+    ghost.style.left = "-9999px";
+    ghost.style.padding = "4px 8px";
+    ghost.style.background = "#555555";
+    ghost.style.color = "#ffffff";
+    ghost.style.fontSize = "0.875rem";
+    ghost.style.border = "1px solid #ccc";
+    ghost.style.borderRadius = "6px";
+    ghost.style.boxShadow = "0 2px 4px rgba(0,0,0,0.1)";
+    ghost.style.pointerEvents = "none";
+    document.body.appendChild(ghost);
+  
+    // 2. drag 이미지 설정
+    e.dataTransfer.setDragImage(ghost, 0, 0);
+  
+    // 3. drag 끝나면 제거
+    e.target._ghost = ghost;
   };
+  
+  const handleDragEnd = (e) => {
+    const ghost = e.target._ghost;
+    if (ghost) {
+      document.body.removeChild(ghost);
+      delete e.target._ghost;
+    }
+  };
+  
 
   // 드롭 가능한 영역 위에 올라왔을 때 기본 동작 막기
   const handleDragOver = (e) => {
@@ -150,14 +182,17 @@ function App() {
               <p className="empty-history">이전 결과가 없습니다.</p>
             ) : (
               history.map((item, index) => (
-                <div key={index} className="history-item"
-                draggable
-                onDragStart={(e) => handleDragStart(e, item)}>
-                  {/*<span>{item}</span>*/}
-                  <div className="history-text">{item}</div> {/* padding 부여 */}
+                <div key={index} className="history-item">
+                  <div
+                    className="history-text"
+                    draggable
+                    onDragStart={(e) => handleDragStart(e, item)}
+                    onDragEnd={handleDragEnd}
+                  >
+                    {item}
+                  </div>
                   <div className="history-buttons">
-                    {/*<button onClick={() => handleCopyItem(item)} className="mini-button">📋복사</button>*/}
-                    <button onClick={() => handleDeleteItem(index)} className="delete-button danger"> X </button>
+                    <button onClick={() => handleDeleteItem(index)} className="delete-button danger">X</button>
                   </div>
                 </div>
               ))
@@ -166,6 +201,7 @@ function App() {
         </div>
 
         <div className="right-panel">
+          <div className="panel-wrapper">
           <h1 className="title">TEXT <br />CALCULATION</h1>
           <div className="panel-box">
           <textarea
@@ -194,6 +230,7 @@ function App() {
 
           </div>
         </div>
+      </div>
       </div>
       </div>
     </div>

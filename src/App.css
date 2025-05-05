@@ -9,13 +9,17 @@ html, body {
   font-family: 'Pretendard', 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  overflow: hidden /*전체 페이지 스크롤방지*/
 }
 
 .container {
   max-width: 1280px; /*화면 전체 크기*/
   width: 100%;
+  height: 100vh;
   margin: 0 auto; /* 가운데 정렬 */
-  padding: 0rem;
+  padding-bottom: 0 !important;
+  margin-bottom: 0 !important;
 }
 * {
   margin: 0;
@@ -23,45 +27,38 @@ html, body {
   box-sizing: border-box;
 }
 
-.title {
-  font-size: 0.875rem;
-  font-weight: 500;
-  text-align: right;
-  color: #383838;
-  margin-bottom: 0.5rem;
-
-  align-self: flex-end;     /* 오른쪽 정렬 */
-  max-width: 450px;         /* panel-box와 동일한 너비 */
-  width: 100%;
-}
 
 
 /* 전체 좌우 구조 */
 .main-section {
+  flex: 1;
   display: flex;
-  gap: 2rem;
+  gap: 1rem;
   justify-content: center;
   align-items: stretch;
+  margin-bottom: 0;
 }
 
 /* -------왼쪽 (히스토리)-------- */
 .history-box {
-  width: 505px;
+  width: 31.5625rem; /* 505px */
+  height: 100vh;
   padding: 0rem;
   background-color: #F0F0F3;
   border: 1px solid #e5e7eb;
-  border-radius: 0rem;
+  border-radius: 0;
 }
+
 /*스크롤기능*/
 .history-scroll {
   max-height: 100vh;
   overflow-y: auto;
   padding-left: 0rem;
-
-   /* 스크롤바 숨기기 (크로스브라우저 대응) */
-   scrollbar-width: none;        /* Firefox */
-   -ms-overflow-style: none;     /* IE, Edge */
+  /* 스크롤바 숨기기 (크로스브라우저 대응) */
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE, Edge */
 }
+
 .history-scroll::-webkit-scrollbar {
   display: none;
 }
@@ -70,6 +67,7 @@ html, body {
   color: #9ca3af;
   text-align: center;
 }
+
 /*각 history*/
 .history-item {
   display: flex;
@@ -83,21 +81,40 @@ html, body {
 
 .history-item:hover {
   background-color: #E9E9EC; /* 살짝 밝은 회색 배경 */
-  cursor: pointer;           /* 커서 모양을 손가락으로 변경 */
+  cursor: pointer;             /* 커서 모양을 손가락으로 변경 */
 }
+/*
 .history-text {
-  padding-left: 31px; /* 원하는 만큼 좌측 여백 */
-  flex-grow: 1;       /* 버튼 영역을 제외하고 가능한 공간 차지 */
+  padding-left: 31px;         /* 원하는 만큼 좌측 여백 
+  flex-grow: 1;               /* 버튼 영역을 제외하고 가능한 공간 차지 
+}*/
+
+.history-text {
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  background-color: #f3f4f6;
+  cursor: grab;
+  user-select: none;
+  font-size: 0.875rem;
+}
+
+.history-text.dragging-token {
+  opacity: 0.7;
+  background-color: #d1d5db;
+  box-shadow: 0 0 4px rgba(0,0,0,0.2);
+  cursor: grabbing;
 }
 
 /*history 안에 있는 버튼들 전부 (현재는 일단 삭제버튼만 있음)*/
 .history-buttons {
-  display: none; /* 기본 상태에서는 숨김 */
+  display: none;              /* 기본 상태에서는 숨김 */
   gap: 0.25rem;
 }
+
 .history-item:hover .history-buttons {
-  display: flex; /* hover 시 보이게 함 */
+  display: flex;               /* hover 시 보이게 함 */
 }
+
 /*삭제버튼*/
 .delete-button {
   background-color:transparent;
@@ -110,15 +127,34 @@ html, body {
   transition: background-color 0.2s ease;
 }
 
-
 /*------- 오른쪽 (입력/결과/버튼)-------- */
 .right-panel {
   display: flex;
   flex-direction: column;
-  gap: 0.0rem;
-  width: 505px;
+  justify-content: flex-end;  /* 아래로 밀착 */
+  gap: 0rem;
+  width: 31.5625rem; /* 505px */
+  height: 100vh;
 }
 
+.title-panel{
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;     /* title 오른쪽 정렬 유지 */
+}
+
+.title {
+font-size: 0.875rem;
+  font-weight: 500;
+  text-align: right;
+  color: #383838;
+  margin-bottom: 0.5rem;
+  margin-right: 4rem;
+
+  align-self: flex-end;     /* 오른쪽 정렬 */
+  max-width: 28.125rem;     /* 450px panel-box와 동일한 너비 */
+  width: 100%;
+}
   /*계산기모양*/
 .panel-box {
   background-color: #1f1f1f; /* 진한 검정 배경 */
@@ -128,17 +164,17 @@ html, body {
   display: flex;
   flex-direction: column;
   gap: 0rem;
-  max-width: 450px;
-  width: 100%;            
-  min-height: 600px;  
+  max-width: 28.125rem; /* 450px */
+  width: 100%;
+  min-height: 40rem; /* px */  
+  margin-top: auto;
 }
 
-
-  /* 입력창 */
+/* 입력창 */
 .input-area {
-  height: 268px;
+  height: 16.75rem; /* 268px */
   background-color: #ffffff;
-  border-radius: 1rem;
+  border-radius: 1rem 1rem 0 0;
   border: 1px solid #d1d5db;
   padding: 1.5rem;
   font-size: 0.875rem; /*14px*/
@@ -147,32 +183,29 @@ html, body {
   outline: none;
   width: 100%;
   box-sizing: border-box;
-  border-bottom-left-radius: 0;  /* 아래쪽 모서리 제거 */
-  border-bottom-right-radius: 0;
   margin: 0; 
 }
+
 /*
 .input-area:focus {
   border-color: #3b82f6;
   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
 }*/
 
-  /* 결과창 */
+/* 결과창 */
 .result-box {
   background-color: #FAFAFA;
   border: 1px solid #e5e7eb;
-  border-radius: 1rem;
-  border-top-left-radius: 0;     /* 위쪽 모서리 제거 */
-  border-top-right-radius: 0;
+  border-radius: 0 0 1rem 1rem;
   padding: 1.5rem;
-  min-height: 84px;
+  max-height: 5.25rem; /* 84px */
   font-size: 1.125rem; /*18px*/
   color: #374151;
+  text-align: right;
   /*box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);*/ 
   width: 100%;
   box-sizing: border-box;
   margin: 0;
-  
 }
 
 .result-box.empty {
@@ -184,20 +217,19 @@ html, body {
 .operator-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr); /* 3열 */
-  gap: 0.75rem;
+  gap: 0.5rem;
   width: fit-content;             /* 버튼에 맞는 크기로 */
-  margin: 0 auto;                 /* 수평 가운데 정렬 */
-  margin-top: auto;      /* 위쪽 공간을 자동으로 채움 */
-  margin-bottom: auto;   /* 아래쪽 공간도 자동으로 채움 */
+  margin: 1.5rem auto 0 auto;     /* 위쪽 여백 추가 (1.5rem) */
 }
 
 .operator-button {
   background-color: #ffffff;
   color: black;
-  font-size: 50px;
+  font-size: 2.5rem; /* 50px */
   font-weight: regular;
-  width: 86px;
-  height: 86px;
+  text-align: center;
+  width: 4rem; /* 86px */
+  height: 4rem; /* 86px */
   border: none;
   border-radius: 50%;
   transition: transform 0.2s ease;
@@ -215,10 +247,10 @@ html, body {
 .equal-button {
   background-color: rgba(255, 255, 255, 0.3);
   color: white;
-  font-size: 2rem;
+  font-size: 2.5rem;
   font-weight: bold;
-  width: 80px;
-  height: 80px;
+  width: 4rem;  /* 80px */
+  height: 4rem;
   border: none;
   border-radius: 50%;
   transition: transform 0.2s ease;
@@ -234,15 +266,14 @@ html, body {
 }
 
 
-
-
-.title { border: 1px dashed red; }/*배치 확인용*/
-.panel-box { border: 1px dashed blue; }
-.history-box { border: 1px dashed red; }/*배치 확인용*/
+/*경계선(배치확인용)
+.title { border: 1px dashed red; }
+.panel-box,.container { border: 1px dashed blue; }
+.history-box,.main-section { border: 1px dashed red; }
+.right-panel,.operator-grid { border: 1px dashed blue; }
 
 
 /*------------------------------------------------------------------
 전체화면 1280px 832px
-
 
 */

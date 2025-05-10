@@ -1,21 +1,23 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './App.css';
 
 function App() {
   const [input, setInput] = useState('');
   const [result, setResult] = useState('');
   const [history, setHistory] = useState([]);
+  const [expandedItems, setExpandedItems] = useState({});
+  const [modalOpen, setModalOpen] = useState(false);
+  const [overflowedItems, setOverflowedItems] = useState({});
+  
 
-  /*입력*/
   const handleInsert = (value) => {
-    setInput((prev) => prev + ' ' + value + ' ');
+    setInput((prev) => `${prev.trim()} ${value} `);
   };
 
-  /*임시 실행 결과 */
   const handleEvaluate = () => {
     if (!input.trim()) {
       setResult('입력값이 없습니다.');
-      return; // 빈 입력이면 history에 아무것도 저장하지 않음
+      return;
     }
   
     const tokens = input.trim().split(/\s+/);
@@ -33,10 +35,9 @@ function App() {
     setHistory((prev) => [...prev, ` ${output}`]);
   };
   
-
   const applyMeaning = (a, b, op) => {
     switch (op) {
-      case '+': return `${a}와 ${b}이(가) 결합되어 새로운 의미를 형성합니다`;
+      case '+': return `${a}${b}`;
       case '-': return `${a}에서 ${b}의 개념이 제거되어 정제된 의미가 됩니다`;
       case '×': return `${a}과 ${b}이(가) 곱해져 복합적인 의미를 가집니다`;
       case '÷': return `${a}을(를) ${b}로 나눠 세부 요소를 분리합니다`;
@@ -48,83 +49,24 @@ function App() {
     }
   };
 
-  /* api 연동 결과
-  const handleEvaluate = async () => {
-    if (!input.trim()) {
-      setResult('입력값이 없습니다.');
-      return;
-    }
-
-    setResult('AI가 결과를 생성 중입니다...');
-
-    const output = await callOpenAI(input);
-
-    if (output) {
-      setResult(output);
-      setHistory((prev) => [output, ...prev]); // 결과 기록에 저장
-    } else {
-      setResult('AI 응답을 가져오지 못했습니다.');
-    }
-  };
-
-  const callOpenAI = async (inputText) => {
-    console.log("📤 OpenAI 요청 내용:", inputText);
-    try {
-      const response = await fetch('https://api.openai.com/v1/chat/completions', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${import.meta.env.VITE_OPENAI_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: 'gpt-3.5-turbo',
-          messages: [
-            {
-              role: 'system',
-              content:
-                '당신은 창의적인 텍스트 계산기입니다. 사용자가 입력한 단어들과 연산기호를 분석해 창의적이고 의미 있는 문장을 생성하세요.',
-            },
-            {
-              role: 'user',
-              content: inputText,
-            },
-          ],
-          temperature: 0.7,
-        }),
-      });
-
-      const data = await response.json();
-      console.log("📥 OpenAI 응답 내용:", data);
-
-      if (data.choices && data.choices.length > 0) {
-        return data.choices[0].message.content.trim();
-      } else {
-        return null;
-      }
-    } catch (err) {
-      console.error('❌ OpenAI API 오류:', err);
-      return null;
-    }
-  };
-  */
-  const handleClearHistory = () => {
-    if (window.confirm('모든 결과 기록을 삭제하시겠습니까?')) {
-      setHistory([]);
-    }
-  };
-
-  const handleCopyItem = (text) => {
-    navigator.clipboard.writeText(text);
-    alert('복사되었습니다: ' + text);
-  };
   /*기록 삭제 */
   const handleDeleteItem = (index) => {
     setHistory((prev) => prev.filter((_, i) => i !== index));
-  };
+    setExpandedItems((prev) => {
+    const updated = { ...prev };
+    delete updated[index];
+    return updated;
+    });
+    setOverflowedItems((prev) => {
+    const updated = { ...prev };
+    delete updated[index];
+    return updated;
+    });
+    };
 
   /*드래그 기능 */
    // 드래그 시작할 때 실행
-   const handleDragStart = (e, text) => {
+  const handleDragStart = (e, text) => {
     // 드래그 데이터 설정
     e.dataTransfer.setData("text/plain", text);
   
@@ -159,19 +101,23 @@ function App() {
     }
   };
   
-
-  // 드롭 가능한 영역 위에 올라왔을 때 기본 동작 막기
   const handleDragOver = (e) => {
     e.preventDefault(); // 꼭 필요!
   };
 
-  // 드롭했을 때 실행
   const handleDrop = (e) => {
     e.preventDefault();
     const droppedText = e.dataTransfer.getData("text/plain");
-    setInput((prev) => prev + ' ' + droppedText);
+    setInput((prev) => prev + '' + droppedText);
   };
 
+
+  const toggleExpand = (index) => {
+    setExpandedItems((prev) => ({ ...prev, [index]: !prev[index] }));
+  };
+
+
+  
   return (
     <div className="container">
       <div className="main-section">
@@ -183,8 +129,11 @@ function App() {
             ) : (
               history.map((item, index) => (
                 <div key={index} className="history-item">
+                  <button className="expand-button" onClick={() => toggleExpand(index)}>
+                    {expandedItems[index] ? '⬆' : '⬇'}
+                  </button>
                   <div
-                    className="history-text"
+                    className={`history-text ${expandedItems[index] ? 'expanded' : 'collapsed'}`}
                     draggable
                     onDragStart={(e) => handleDragStart(e, item)}
                     onDragEnd={handleDragEnd}
@@ -201,7 +150,7 @@ function App() {
         </div>
 
         <div className="right-panel">
-          <div className="panel-wrapper">
+          <div className="title-panel">
           <h1 className="title">TEXT <br />CALCULATION</h1>
           <div className="panel-box">
           <textarea
@@ -213,8 +162,14 @@ function App() {
             onDragOver={handleDragOver}
           />
 
-          <div className={result ? 'result-box' : 'result-box empty'}>
-            {result ? result : '결과가 여기에 표시됩니다...'}
+          <div className={result ? 'result-box' : 'result-box empty'}
+            onClick={() => {
+              if (result) {
+                setModalOpen(true);
+              }
+            }}
+          >
+            {result || '결과가 여기에 표시됩니다...'}
           </div>
 
           <div className="operator-grid">
@@ -232,6 +187,20 @@ function App() {
         </div>
       </div>
       </div>
+      {modalOpen && (
+          <div className="modal-overlay" onClick={() => setModalOpen(false)}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+              <div className="modal-header">
+                <button className="close-button" onClick={() => setModalOpen(false)}>
+                  닫기
+                </button>
+              </div>
+              <div className="modal-body">
+                <p>결과 상세 내용을 여기에 표시할 수 있습니다.</p>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );

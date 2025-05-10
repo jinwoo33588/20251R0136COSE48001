@@ -55,8 +55,8 @@ html, body {
   overflow-y: auto;
   padding-left: 0rem;
   /* 스크롤바 숨기기 (크로스브라우저 대응) */
-  scrollbar-width: none;        /* Firefox */
-  -ms-overflow-style: none;     /* IE, Edge */
+  scrollbar-width: none;
+  -ms-overflow-style: none;
 }
 
 .history-scroll::-webkit-scrollbar {
@@ -68,36 +68,53 @@ html, body {
   text-align: center;
 }
 
-/*각 history*/
+/* 📌 각 히스토리 항목 전체 박스 */
 .history-item {
   display: flex;
-  justify-content: space-between;
-  align-items: center;
+  justify-content: flex-start;   /* 왼쪽부터 나열 */
+  align-items: flex-start;       /* 위 정렬 */
+  gap: 0.5rem;                   /* 내부 요소 간 여백 */
   padding: 0.5rem 0;
-  border-bottom: 0px solid #e5e7eb; /*경계선(*/
+  border-bottom: 0px solid #e5e7eb;
   font-size: 0.875rem;
   color: #000000;
 }
 
+/* 🪄 마우스 올렸을 때 배경 강조 */
 .history-item:hover {
-  background-color: #E9E9EC; /* 살짝 밝은 회색 배경 */
-  cursor: pointer;             /* 커서 모양을 손가락으로 변경 */
+  background-color: #E9E9EC;
+  cursor: pointer;
 }
-/*
-.history-text {
-  padding-left: 31px;         /* 원하는 만큼 좌측 여백 
-  flex-grow: 1;               /* 버튼 영역을 제외하고 가능한 공간 차지 
-}*/
 
+/* ⬇️ 펼치기/접기 버튼 */
+.expand-button {
+  flex-shrink: 0;
+  margin-top: 0.25rem;
+  cursor: pointer;
+  background: none;
+  border: none;
+  font-size: 1rem;
+}
+
+/* 📄 텍스트 박스 */
 .history-text {
+  flex-grow: 1;
+  text-align: left;
   padding: 0.25rem 0.5rem;
   border-radius: 0.5rem;
-  background-color: #f3f4f6;
+  background-color: #F0F0F3;
   cursor: grab;
   user-select: none;
   font-size: 0.875rem;
+
+  max-height: 2.5rem;
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  transition: max-height 0.3s ease;
 }
 
+/* 드래그 중일 때 */
 .history-text.dragging-token {
   opacity: 0.7;
   background-color: #d1d5db;
@@ -105,19 +122,31 @@ html, body {
   cursor: grabbing;
 }
 
-/*history 안에 있는 버튼들 전부 (현재는 일단 삭제버튼만 있음)*/
+/* 펼쳤을 때 */
+.history-text.expanded {
+  white-space: normal;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+/* ❌ 삭제 버튼 영역 */
 .history-buttons {
-  display: none;              /* 기본 상태에서는 숨김 */
   gap: 0.25rem;
+  width: 2.5rem;
+  display: flex;
+  justify-content: flex-end;
+  visibility: hidden;
+  transition: visibility 0.2s ease;
 }
 
+/* hover 시 버튼 보이게 */
 .history-item:hover .history-buttons {
-  display: flex;               /* hover 시 보이게 함 */
+  visibility: visible;
 }
 
-/*삭제버튼*/
+/* 삭제 버튼 스타일 */
 .delete-button {
-  background-color:transparent;
+  background-color: transparent;
   color: #374151;
   border: none;
   padding: 0.25rem 1rem;
@@ -126,6 +155,7 @@ html, body {
   cursor: pointer;
   transition: background-color 0.2s ease;
 }
+
 
 /*------- 오른쪽 (입력/결과/버튼)-------- */
 .right-panel {
@@ -199,6 +229,7 @@ font-size: 0.875rem;
   border-radius: 0 0 1rem 1rem;
   padding: 1.5rem;
   max-height: 5.25rem; /* 84px */
+  overflow-y: auto; /* 세로 스크롤 가능하게 */
   font-size: 1.125rem; /*18px*/
   color: #374151;
   text-align: right;
@@ -264,6 +295,65 @@ font-size: 0.875rem;
   background-color: rgba(255, 255, 255, 0.1);
   transform: scale(1.05);
 }
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-card {
+  background: #ffffff;
+  width: 48rem; /* 약 768px */
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.close-button {
+  background-color: #eeeeee;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+.modal-preview {
+  font-size: 1.125rem;
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.modal-description {
+  font-size: 0.875rem;
+  color: #333;
+}
+
 
 
 /*경계선(배치확인용)

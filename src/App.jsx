@@ -9,6 +9,9 @@ function App() {
   const [modalOpen, setModalOpen] = useState(false);
   const [overflowedItems, setOverflowedItems] = useState({});
   
+  const textRefs = useRef([]);
+
+ 
 
   const handleInsert = (value) => {
     setInput((prev) => `${prev.trim()} ${value} `);
@@ -111,41 +114,71 @@ function App() {
     setInput((prev) => prev + '' + droppedText);
   };
 
+  // history overflow 여부 계산
+  useEffect(() => {
+    const newMap = {};
+    textRefs.current.forEach((el, idx) => {
+      if (el) {
+        newMap[idx] = el.scrollWidth > el.clientWidth;
+      }
+    });
+    setOverflowedItems(newMap);
+  }, [history]);
+
 
   const toggleExpand = (index) => {
     setExpandedItems((prev) => ({ ...prev, [index]: !prev[index] }));
   };
-
+  
 
   
   return (
     <div className="container">
       <div className="main-section">
 
-        <div className="history-box">
+      <div className="history-box">
           <div className="history-scroll">
-            {history.length === 0 ? (
-              <p className="empty-history">이전 결과가 없습니다.</p>
-            ) : (
-              history.map((item, index) => (
-                <div key={index} className="history-item">
-                  <button className="expand-button" onClick={() => toggleExpand(index)}>
-                    {expandedItems[index] ? '⬆' : '⬇'}
-                  </button>
-                  <div
-                    className={`history-text ${expandedItems[index] ? 'expanded' : 'collapsed'}`}
-                    draggable
-                    onDragStart={(e) => handleDragStart(e, item)}
-                    onDragEnd={handleDragEnd}
-                  >
-                    {item}
-                  </div>
-                  <div className="history-buttons">
-                    <button onClick={() => handleDeleteItem(index)} className="delete-button danger">X</button>
-                  </div>
-                </div>
-              ))
-            )}
+            {history.length === 0
+              ? <p className="empty-history">이전 결과가 없습니다.</p>
+              : (() => {
+                  // 3) 리렌더링될 때마다 refs 초기화
+                  textRefs.current = [];
+                  return history.map((item, index) => (
+                    <div key={index} className="history-item">
+                      {/* 4) overflow 된 경우에만 버튼 보이기 */}
+                      {overflowedItems[index] && (
+                        <button
+                          className="expand-button"
+                          onClick={() => setExpandedItems(prev => ({
+                            ...prev, [index]: !prev[index]
+                          }))}
+                        >
+                          {expandedItems[index] ? '⬆' : '>'}
+                        </button>
+                      )}
+
+                      <div
+                        ref={el => textRefs.current[index] = el}
+                        className={`history-text ${expandedItems[index] ? 'expanded' : 'collapsed'}`}
+                        draggable
+                        onDragStart={(e) => handleDragStart(e, item)}
+                        onDragEnd={handleDragEnd}
+                      >
+                        {item}
+                      </div>
+
+                      <div className="history-buttons">
+                        <button
+                          onClick={() => handleDeleteItem(index)}
+                          className="delete-button danger"
+                        >
+                          X
+                        </button>
+                      </div>
+                    </div>
+                  ));
+                })()
+            }
           </div>
         </div>
 
@@ -162,15 +195,30 @@ function App() {
             onDragOver={handleDragOver}
           />
 
-          <div className={result ? 'result-box' : 'result-box empty'}
+          <div
+            className={result ? 'result-box' : 'result-box empty'}
             onClick={() => {
               if (result) {
                 setModalOpen(true);
               }
             }}
           >
-            {result || '결과가 여기에 표시됩니다...'}
+            <div className="result-content">
+              {result || '결과가 여기에 표시됩니다...'}
+            </div>
+            {result && (
+              <button
+                className="explanation-button"
+                onClick={e => {
+                  e.stopPropagation();    // 부모 클릭 이벤트 방지
+                  setModalOpen(true);     // 모달 열기
+                }}
+              >
+                풀이보기
+              </button>
+            )}
           </div>
+
 
           <div className="operator-grid">
           {['+', '-', '×', '÷', '<>', '()', '→', '∴', '='].map((op) => (
@@ -189,13 +237,14 @@ function App() {
       </div>
       {modalOpen && (
           <div className="modal-overlay" onClick={() => setModalOpen(false)}>
-            <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+            <div className="modal-content" onClick={(e) => e.stopPropagation()}> /* 내부클릭 방지 */
               <div className="modal-header">
-                <button className="close-button" onClick={() => setModalOpen(false)}>
-                  닫기
-                </button>
+                
               </div>
-              <div className="modal-body">
+              <div className="modal-card">
+                <button className="close-button" onClick={() => setModalOpen(false)}>
+                  풀이닫기
+                </button>
                 <p>결과 상세 내용을 여기에 표시할 수 있습니다.</p>
               </div>
             </div>

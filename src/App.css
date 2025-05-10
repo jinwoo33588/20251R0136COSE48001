@@ -14,7 +14,7 @@ html, body {
 }
 
 .container {
-  max-width: 1280px; /*화면 전체 크기*/
+  max-width: 1280px;
   width: 100%;
   height: 100vh;
   margin: 0 auto; /* 가운데 정렬 */
@@ -26,7 +26,6 @@ html, body {
   padding: 0;
   box-sizing: border-box;
 }
-
 
 
 /* 전체 좌우 구조 */
@@ -68,26 +67,29 @@ html, body {
   text-align: center;
 }
 
-/* 📌 각 히스토리 항목 전체 박스 */
+/* 각 히스토리 항목 */
 .history-item {
   display: flex;
-  justify-content: flex-start;   /* 왼쪽부터 나열 */
-  align-items: flex-start;       /* 위 정렬 */
-  gap: 0.5rem;                   /* 내부 요소 간 여백 */
+  justify-content: flex-start;   
+  align-items: flex-start;       
+  gap: 0.5rem;                   
   padding: 0.5rem 0;
   border-bottom: 0px solid #e5e7eb;
   font-size: 0.875rem;
   color: #000000;
 }
 
-/* 🪄 마우스 올렸을 때 배경 강조 */
 .history-item:hover {
   background-color: #E9E9EC;
   cursor: pointer;
 }
 
-/* ⬇️ 펼치기/접기 버튼 */
-.expand-button {
+.history-item:hover .history-text {
+  background-color: #E9E9EC;
+}
+
+
+.expand-button {                  /* 펼치기/접기 버튼 */
   flex-shrink: 0;
   margin-top: 0.25rem;
   cursor: pointer;
@@ -96,8 +98,8 @@ html, body {
   font-size: 1rem;
 }
 
-/* 📄 텍스트 박스 */
-.history-text {
+
+.history-text {                   /* 텍스트 */
   flex-grow: 1;
   text-align: left;
   padding: 0.25rem 0.5rem;
@@ -114,7 +116,7 @@ html, body {
   transition: max-height 0.3s ease;
 }
 
-/* 드래그 중일 때 */
+
 .history-text.dragging-token {
   opacity: 0.7;
   background-color: #d1d5db;
@@ -122,14 +124,13 @@ html, body {
   cursor: grabbing;
 }
 
-/* 펼쳤을 때 */
 .history-text.expanded {
   white-space: normal;
   max-height: 200px;
   overflow-y: auto;
 }
 
-/* ❌ 삭제 버튼 영역 */
+/* 삭제 버튼 영역 */
 .history-buttons {
   gap: 0.25rem;
   width: 2.5rem;
@@ -185,7 +186,8 @@ font-size: 0.875rem;
   max-width: 28.125rem;     /* 450px panel-box와 동일한 너비 */
   width: 100%;
 }
-  /*계산기모양*/
+
+/* 계산기모양 */
 .panel-box {
   background-color: #1f1f1f; /* 진한 검정 배경 */
   padding: 1rem;
@@ -194,33 +196,27 @@ font-size: 0.875rem;
   display: flex;
   flex-direction: column;
   gap: 0rem;
-  max-width: 28.125rem; /* 450px */
+  max-width: 28.125rem;
   width: 100%;
-  min-height: 40rem; /* px */  
+  min-height: 40rem; 
   margin-top: auto;
 }
 
 /* 입력창 */
 .input-area {
-  height: 16.75rem; /* 268px */
+  height: 16.75rem;
   background-color: #ffffff;
   border-radius: 1rem 1rem 0 0;
   border: 1px solid #d1d5db;
   padding: 1.5rem;
-  font-size: 0.875rem; /*14px*/
+  font-size: 0.875rem;
   resize: none;
-  /*box-shadow: inset 0 1px 3px rgba(0,0,0,0.1);*/
+  
   outline: none;
   width: 100%;
   box-sizing: border-box;
   margin: 0; 
 }
-
-/*
-.input-area:focus {
-  border-color: #3b82f6;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.3);
-}*/
 
 /* 결과창 */
 .result-box {
@@ -228,15 +224,15 @@ font-size: 0.875rem;
   border: 1px solid #e5e7eb;
   border-radius: 0 0 1rem 1rem;
   padding: 1.5rem;
-  max-height: 5.25rem; /* 84px */
-  overflow-y: auto; /* 세로 스크롤 가능하게 */
-  font-size: 1.125rem; /*18px*/
+  max-height: 5.25rem;
+  overflow-y: auto;
+  font-size: 1.125rem;
   color: #374151;
   text-align: right;
-  /*box-shadow: inset 0 1px 3px rgba(0,0,0,0.05);*/ 
   width: 100%;
   box-sizing: border-box;
   margin: 0;
+  position: relative;
 }
 
 .result-box.empty {
@@ -244,23 +240,130 @@ font-size: 0.875rem;
   text-align: center;
 }
 
-  /* 연산자 버튼들 */
+.result-box:hover {
+  background-color: rgba(255, 255, 255, 0.962);
+  text-align: center;
+}
+
+/* 결과 텍스트 기본 상태 */
+.result-content {
+  transition: filter 0.3s ease;
+}
+
+/* hover 시 결과 텍스트에 모자이크(블러) 효과 */
+.result-box:hover .result-content {
+  display: block;
+  width: 100%;
+  filter: blur(5px);
+}
+
+.explanation-button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);  /* 중앙 정렬 */
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 0.5rem;
+  background-color: #ffffff;
+  color: #000000;
+  font-size: 1rem;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);      /* drop shadow 추가 */
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 1; /* 혹시 겹침 문제 방지 */
+}
+
+.result-box:hover .explanation-button {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+/* 상세보기 */
+.modal-overlay { /*반투명 배경(화면전체덮음)*/
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-card { /*실제 컨텐츠 내용*/
+  background: #ffffff;
+  height: 36rem;
+  width: 48rem; /* 약 768px */
+  border-radius: 1rem;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  padding: 2rem;
+  position: relative;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 1.5rem;
+}
+
+.close-button {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  background: 383838;
+  color : ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font-size: 0.875rem;
+  cursor: pointer;
+}
+
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  background-color: #2454ac
+}
+
+.modal-preview {
+  font-size: 1.125rem;
+  background-color: #f9f9f9;
+  padding: 1rem;
+  border-radius: 0.5rem;
+  border: 1px solid #e5e7eb;
+}
+
+.modal-description {
+  font-size: 0.875rem;
+  color: #333;
+}
+
+/* 연산자 버튼들 */
 .operator-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr); /* 3열 */
+  grid-template-columns: repeat(3, 1fr); 
   gap: 0.5rem;
-  width: fit-content;             /* 버튼에 맞는 크기로 */
-  margin: 1.5rem auto 0 auto;     /* 위쪽 여백 추가 (1.5rem) */
+  width: fit-content;             
+  margin: 1.5rem auto 0 auto;     
 }
 
 .operator-button {
   background-color: #ffffff;
   color: black;
-  font-size: 2.5rem; /* 50px */
+  font-size: 2.5rem;
   font-weight: regular;
   text-align: center;
-  width: 4rem; /* 86px */
-  height: 4rem; /* 86px */
+  width: 4rem; 
+  height: 4rem;
   border: none;
   border-radius: 50%;
   transition: transform 0.2s ease;
@@ -280,7 +383,7 @@ font-size: 0.875rem;
   color: white;
   font-size: 2.5rem;
   font-weight: bold;
-  width: 4rem;  /* 80px */
+  width: 4rem;
   height: 4rem;
   border: none;
   border-radius: 50%;
@@ -296,63 +399,6 @@ font-size: 0.875rem;
   transform: scale(1.05);
 }
 
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-card {
-  background: #ffffff;
-  width: 48rem; /* 약 768px */
-  border-radius: 1rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  padding: 2rem;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 1.5rem;
-}
-
-.close-button {
-  background-color: #eeeeee;
-  border: none;
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  cursor: pointer;
-}
-
-.modal-body {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-}
-
-.modal-preview {
-  font-size: 1.125rem;
-  background-color: #f9f9f9;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid #e5e7eb;
-}
-
-.modal-description {
-  font-size: 0.875rem;
-  color: #333;
-}
 
 
 

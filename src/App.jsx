@@ -185,7 +185,8 @@ function App() {
                   </button>
                 )}
               </div>
-
+              
+              {/*operator 수정 필요*/}
               <div className="operator-grid">
                 {['+', '-', '×', '÷', '<>', '()', '→', '∴', '='].map((op) => (
                   <button

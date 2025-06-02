@@ -208,15 +208,21 @@ function App() {
               <div className="modal-header" />
               <div className="modal-card">
                 <button className="close-button" onClick={() => setModalOpen(false)}>
-                  풀이닫기
+                  풀이 닫기
                 </button>
-                <p>{detailedResult || '결과 상세 내용을 여기에 표시할 수 있습니다.'}</p>
-              </div>
+                <div className="modal-result">
+                  {result || '결과가 여기에 표시됩니다.'}</div>
+                <div className="modal-divider" />
+                <div className="modal-body">
+                <p className="modal-description">
+                  {detailedResult || '상세 설명이 여기에 표시됩니다.'}</p>
             </div>
           </div>
-        )}
+        </div>
       </div>
+      )}
     </div>
+  </div>
   );
 }
 

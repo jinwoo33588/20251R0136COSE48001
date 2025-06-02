@@ -297,8 +297,8 @@ font-size: 0.875rem;
 
 .modal-card { /*실제 컨텐츠 내용*/
   background: #ffffff;
-  height: 36rem;
-  width: 48rem; /* 약 768px */
+  height: 628px;
+  width: 788px;
   border-radius: 1rem;
   box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
   overflow: hidden;
@@ -318,33 +318,61 @@ font-size: 0.875rem;
   position: absolute;
   top: 1rem;
   right: 1rem;
-  background: 383838;
-  color : ffffff;
+  background-color: #383838;         /* 없으면 회색톤 가볍게 추가 */
+  color: #ffffff;                       /* 텍스트 색상 */
+  padding: 0px 10px;
+  min-width: 72px;                     /* 상하좌우 10px */
+  height: 28px;                      /* 고정 높이 */
+  border: none;                      /* 테두리 없음 */
+  border-radius: 6px;                /* 둥근 모서리 */
+  font-size: 0.875rem;               /* 약 14px */
+  cursor: pointer;                   /* 마우스 커서 변경 */
+}
+
+.modal-result {
+  position: absolute;
+  top: 96px;
+  left: 53px;
+  width: 683px;
+  height: 69px;
+  background-color: #FAFAFA;
+  border-radius: 10px;
+  box-sizing: border-box; /* 내부 패딩과 테두리를 포함한 정확한 크기 계산 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.125rem;
+  color: #000000;
+  text-align: center;
+  margin: 0;
+}
+
+.modal-divider {
+  position: absolute;
+  top: 207px;
+  width: calc(100% + 4rem);   /* ← 부모 padding 2rem × 2 보정 */
+  margin-left: -2rem;         /* 왼쪽으로 당겨서 확장 */
+  margin-right: -2rem;
+  height: 1px;
+  background-color: #D9D9D9;
   border: none;
-  border-radius: 6px;
-  padding: 0.5rem 1rem;
-  font-size: 0.875rem;
-  cursor: pointer;
 }
 
 .modal-body {
-  display: flex;
-  flex-direction: column;
-  gap: 2rem;
-  background-color: #2454ac
-}
-
-.modal-preview {
-  font-size: 1.125rem;
-  background-color: #f9f9f9;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  border: 1px solid #e5e7eb;
+  position: absolute;
+  top: 242px;
+  left: 53px;
+  width: 683px;
+  overflow-y: auto;
+  max-height: 60vh;
+  padding-right: 0.5rem;
 }
 
 .modal-description {
+  position: static;
   font-size: 0.875rem;
-  color: #333;
+  color: #000000;
+  white-space: pre-wrap; /* 줄바꿈 유지 */
 }
 
 /* 연산자 버튼들 */

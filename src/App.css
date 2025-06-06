@@ -1,443 +1,488 @@
-
-html, body {
-  background-color: #ffffff;
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-size: 16px; /* 1rem = 16px 기준 */
-  height: 100%;
-  font-family: 'Pretendard', 'Helvetica Neue', sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-
-  overflow: hidden /*전체 페이지 스크롤방지*/
-}
-
-.container {
-  max-width: 1280px;
-  width: 100%;
-  height: 100vh;
-  margin: 0 auto; /* 가운데 정렬 */
-  padding-bottom: 0 !important;
-  margin-bottom: 0 !important;
-}
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-
-/* 전체 좌우 구조 */
-.main-section {
-  flex: 1;
-  display: flex;
-  gap: 1rem;
-  justify-content: center;
-  align-items: stretch;
-  margin-bottom: 0;
-}
-
-/* -------왼쪽 (히스토리)-------- */
-.history-box {
-  width: 31.5625rem; /* 505px */
-  height: 100vh;
-  padding: 0rem;
-  background-color: #F0F0F3;
-  border: 1px solid #e5e7eb;
-  border-radius: 0;
-}
-
-/*스크롤기능*/
-.history-scroll {
-  max-height: 100vh;
-  overflow-y: auto;
-  padding-left: 0rem;
-  /* 스크롤바 숨기기 (크로스브라우저 대응) */
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
-
-.history-scroll::-webkit-scrollbar {
-  display: none;
-}
-
-.empty-history {
-  color: #9ca3af;
-  text-align: center;
-}
-
-/* 각 히스토리 항목 */
-.history-item {
-  display: flex;
-  justify-content: flex-start;   
-  align-items: flex-start;       
-  gap: 0.5rem;                   
-  padding: 0.5rem 0;
-  border-bottom: 0px solid #e5e7eb;
-  font-size: 0.875rem;
-  color: #000000;
-}
-
-.history-item:hover {
-  background-color: #E9E9EC;
-  cursor: pointer;
-}
-
-.history-item:hover .history-text {
-  background-color: #E9E9EC;
-}
-
-
-.expand-button {                  /* 펼치기/접기 버튼 */
-  flex-shrink: 0;
-  margin-top: 0.25rem;
-  cursor: pointer;
-  background: none;
-  border: none;
-  font-size: 1rem;
-}
-
-
-.history-text {                   /* 텍스트 */
-  flex-grow: 1;
-  text-align: left;
-  padding: 0.25rem 0.5rem;
-  border-radius: 0.5rem;
-  background-color: #F0F0F3;
-  cursor: grab;
-  user-select: none;
-  font-size: 0.875rem;
-
-  max-height: 2.5rem;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
-  transition: max-height 0.3s ease;
-}
-
-
-.history-text.dragging-token {
-  opacity: 0.7;
-  background-color: #d1d5db;
-  box-shadow: 0 0 4px rgba(0,0,0,0.2);
-  cursor: grabbing;
-}
-
-.history-text.expanded {
-  white-space: normal;
-  max-height: 200px;
-  overflow-y: auto;
-}
-
-/* 삭제 버튼 영역 */
-.history-buttons {
-  gap: 0.25rem;
-  width: 2.5rem;
-  display: flex;
-  justify-content: flex-end;
-  visibility: hidden;
-  transition: visibility 0.2s ease;
-}
-
-/* hover 시 버튼 보이게 */
-.history-item:hover .history-buttons {
-  visibility: visible;
-}
-
-/* 삭제 버튼 스타일 */
-.delete-button {
-  background-color: transparent;
-  color: #374151;
-  border: none;
-  padding: 0.25rem 1rem;
-  font-size: 0.875rem;
-  border-radius: 0.375rem;
-  cursor: pointer;
-  transition: background-color 0.2s ease;
-}
-
-
-/*------- 오른쪽 (입력/결과/버튼)-------- */
-.right-panel {
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-end;  /* 아래로 밀착 */
-  gap: 0rem;
-  width: 31.5625rem; /* 505px */
-  height: 100vh;
-}
-
-.title-panel{
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;     /* title 오른쪽 정렬 유지 */
-}
-
-.title {
-font-size: 0.875rem;
-  font-weight: 500;
-  text-align: right;
-  color: #383838;
-  margin-bottom: 0.5rem;
-  margin-right: 4rem;
-
-  align-self: flex-end;     /* 오른쪽 정렬 */
-  max-width: 28.125rem;     /* 450px panel-box와 동일한 너비 */
-  width: 100%;
-}
-
-/* 계산기모양 */
-.panel-box {
-  background-color: #1f1f1f; /* 진한 검정 배경 */
-  padding: 1rem;
-  border-radius: 1rem;
-  box-shadow: 0 0 10px rgba(0,0,0,0.3);
-  display: flex;
-  flex-direction: column;
-  gap: 0rem;
-  max-width: 28.125rem;
-  width: 100%;
-  min-height: 40rem; 
-  margin-top: auto;
-}
-
-/* 입력창 */
-.input-area {
-  height: 16.75rem;
-  background-color: #ffffff;
-  border-radius: 1rem 1rem 0 0;
-  border: 1px solid #d1d5db;
-  padding: 1.5rem;
-  font-size: 0.875rem;
-  resize: none;
+/* ----------------------------------------
+   HTML / BODY 기본 설정 (변경 없음)
+   ---------------------------------------- */
+   html, body {
+    background-color: #ffffff;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-size: 16px;
+    height: 100%;
+    font-family: 'Pretendard', 'Helvetica Neue', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow: hidden; /* 전체 페이지 스크롤 방지 */
+  }
   
-  outline: none;
-  width: 100%;
-  box-sizing: border-box;
-  margin: 0; 
+  .container {
+    max-width: 1280px;
+    width: 100%;
+    height: 100vh;
+    margin: 0 auto;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
+  }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  /* ----------------------------------------
+     main-section: 왼쪽(히스토리) / 오른쪽(입력/결과/연산자)
+     ---------------------------------------- */
+  .main-section {
+    flex: 1;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+    align-items: stretch;
+    margin-bottom: 0;
+  }
+  
+  /* ----------------------------------------
+     왼쪽(히스토리) 박스
+     ---------------------------------------- */
+  .history-box {
+    width: 31.5625rem; /* 505px */
+    height: 100vh;
+    background-color: #F0F0F3;
+    border: 1px solid #e5e7eb;
+    border-radius: 0;
+  }
+  .history-container {
+    position: relative; /* top-fade, bottom-fade 오버레이를 절대위치로 놓기 위해 */
+  }
+  
+  .history-scroll {
+    max-height: 100vh;
+    overflow-y: auto;
+    padding-left: 0rem;
+    scrollbar-width: none;   /* 파이어폭스에서 스크롤 숨기기 */
+    -ms-overflow-style: none; /* IE10 */
+
+    padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+
+    -webkit-overflow-scrolling: touch;
+  overscroll-behavior: auto;
+  }
+  .history-scroll::-webkit-scrollbar {
+    display: none; /* 크롬/사파리 */
+  }
+
+/* ─────────────────────────────────────────────────────────────────
+   그라데이션 오버레이 공통: 기본적으로 숨겨져 있다가,
+   .visible 클래스가 붙으면 opacity:1이 되어 나타난다.
+   ───────────────────────────────────────────────────────────────── */
+   .scroll-fade {
+    position: absolute;
+    left: 0;
+    right: 0;
+    height: 3rem;          /* 높이는 취향에 맞게 조절 가능 */
+    pointer-events: none;    /* 터치/클릭을 막아 스크롤 동작에 방해되지 않도록 */
+    opacity: 0;
+    transition: opacity 0.2s;
+    z-index: 1;
+  }
+  
+  /* ─────────────────────────────────────────────────────────────────
+     상단 페이드: 위쪽(0)에서 아래쪽으로 투명 해지는 그라데이션
+     ───────────────────────────────────────────────────────────────── */
+  .top-fade {
+    top: 0;
+    background: linear-gradient(
+      to bottom,
+      rgba(255, 255, 255, 1) 30%,   /* 30% 영역까지 완전 불투명 */
+    rgba(255, 255, 255, 0) 100%   /* 100% 지점(끝)에서 완전 투명 */
+    );
+  }
+  
+  /* ─────────────────────────────────────────────────────────────────
+     하단 페이드: 아래쪽(0)에서 위쪽으로 투명 해지는 그라데이션
+     ───────────────────────────────────────────────────────────────── */
+  .bottom-fade {
+    bottom: 0;
+    background: linear-gradient(
+      to top,
+      rgba(255, 255, 255, 1) 30%,
+    rgba(255, 255, 255, 0) 100%
+    );
+  }
+  
+  /* ─────────────────────────────────────────────────────────────────
+     페이드가 보여질 때 .visible 클래스 추가
+     ───────────────────────────────────────────────────────────────── */
+  .scroll-fade.visible {
+    opacity: 1;
+  }
+
+  .empty-history {
+    color: #9ca3af;
+    text-align: center;
+  }
+  
+  /* 히스토리 아이템 */
+  .history-item {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    font-size: 0.875rem;
+    color: #000000;
+    border-bottom: 0px solid #e5e7eb;
+  }
+  
+  .history-item:hover {
+    background-color: #E9E9EC;
+    cursor: pointer;
+  }
+  
+  .history-item:hover .history-text {
+    background-color: #E9E9EC;
+  }
+  
+  .expand-button {
+    flex-shrink: 0;
+    margin-top: 0.25rem;
+    cursor: pointer;
+    background: none;
+    border: none;
+    font-size: 1rem;
+  }
+  
+  .history-text {
+    flex-grow: 1;
+    text-align: left;
+    padding: 0.25rem 0.5rem;
+    border-radius: 0.5rem;
+    background-color: #F0F0F3;
+    cursor: grab;
+    user-select: none;
+    font-size: 0.875rem;
+    max-height: 2.5rem;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    transition: max-height 0.3s ease;
+  }
+  
+  .history-text.expanded {
+    white-space: normal;
+    max-height: 200px;
+    overflow-y: auto;
+  }
+  
+  .history-buttons {
+    gap: 0.25rem;
+    width: 2.5rem;
+    display: flex;
+    justify-content: flex-end;
+    visibility: hidden;
+    transition: visibility 0.2s ease;
+  }
+  .history-item:hover .history-buttons {
+    visibility: visible;
+  }
+  
+  .delete-button {
+    background-color: transparent;
+    color: #374151;
+    border: none;
+    padding: 0.25rem 1rem;
+    font-size: 0.875rem;
+    border-radius: 0.375rem;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+  }
+  
+  /* ----------------------------------------
+     오른쪽(입력/결과/연산자) 레이아웃
+     ---------------------------------------- */
+  .right-panel {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    gap: 0rem;
+    width: 31.5625rem; /* 505px */
+    height: 100vh;
+  }
+  
+  .title-panel {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+  }
+  
+  
+  .title-icon {
+  width: 8rem;             /* 아이콘 너비 */
+  height: 8rem;            /* 아이콘 높이 */
+  object-fit: contain;     /* 비율 유지 */
+  margin-right: 0.5rem;    /* 아이콘과 텍스트 사이 간격 */
 }
 
-/* 결과창 */
-.result-box {
-  background-color: #FAFAFA;
-  border: 1px solid #e5e7eb;
-  border-radius: 0 0 1rem 1rem;
-  padding: 1.5rem;
-  max-height: 5.25rem;
-  overflow-y: auto;
-  font-size: 1.125rem;
-  color: #374151;
-  text-align: right;
-  width: 100%;
-  box-sizing: border-box;
-  margin: 0;
-  position: relative;
-}
-
-.result-box.empty {
-  color: #9ca3af;
-  text-align: center;
-}
-
-.result-box:hover {
-  background-color: rgba(255, 255, 255, 0.962);
-  text-align: center;
-}
-
-/* 결과 텍스트 기본 상태 */
-.result-content {
-  transition: filter 0.3s ease;
-}
-
-/* hover 시 결과 텍스트에 모자이크(블러) 효과 */
-.result-box:hover .result-content {
-  display: block;
-  width: 100%;
-  filter: blur(5px);
-}
-
-.explanation-button {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);  /* 중앙 정렬 */
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 0.5rem;
-  background-color: #ffffff;
-  color: #000000;
-  font-size: 1rem;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);      /* drop shadow 추가 */
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s ease;
-  z-index: 1; /* 혹시 겹침 문제 방지 */
-}
-
-.result-box:hover .explanation-button {
-  opacity: 1;
-  pointer-events: auto;
-}
-
-/* 상세보기 */
-.modal-overlay { /*반투명 배경(화면전체덮음)*/
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.3);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-}
-
-.modal-card { /*실제 컨텐츠 내용*/
-  background: #ffffff;
-  height: 628px;
-  width: 788px;
-  border-radius: 1rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
-  overflow: hidden;
-  display: flex;
-  flex-direction: column;
-  padding: 2rem;
-  position: relative;
-}
-
-.modal-header {
-  display: flex;
-  justify-content: flex-end;
-  margin-bottom: 1.5rem;
-}
-
-.close-button {
-  position: absolute;
-  top: 1rem;
-  right: 1rem;
-  background-color: #383838;         /* 없으면 회색톤 가볍게 추가 */
-  color: #ffffff;                       /* 텍스트 색상 */
-  padding: 0px 10px;
-  min-width: 72px;                     /* 상하좌우 10px */
-  height: 28px;                      /* 고정 높이 */
-  border: none;                      /* 테두리 없음 */
-  border-radius: 6px;                /* 둥근 모서리 */
-  font-size: 0.875rem;               /* 약 14px */
-  cursor: pointer;                   /* 마우스 커서 변경 */
-}
-
-.modal-result {
-  position: absolute;
-  top: 96px;
-  left: 53px;
-  width: 683px;
-  height: 69px;
-  background-color: #FAFAFA;
-  border-radius: 10px;
-  box-sizing: border-box; /* 내부 패딩과 테두리를 포함한 정확한 크기 계산 */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.125rem;
-  color: #000000;
-  text-align: center;
-  margin: 0;
-}
-
-.modal-divider {
-  position: absolute;
-  top: 207px;
-  width: calc(100% + 4rem);   /* ← 부모 padding 2rem × 2 보정 */
-  margin-left: -2rem;         /* 왼쪽으로 당겨서 확장 */
-  margin-right: -2rem;
-  height: 1px;
-  background-color: #D9D9D9;
-  border: none;
-}
-
-.modal-body {
-  position: absolute;
-  top: 242px;
-  left: 53px;
-  width: 683px;
-  overflow-y: auto;
-  max-height: 60vh;
-  padding-right: 0.5rem;
-}
-
-.modal-description {
-  position: static;
-  font-size: 0.875rem;
-  color: #000000;
-  white-space: pre-wrap; /* 줄바꿈 유지 */
-}
-
-/* 연산자 버튼들 */
-.operator-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr); 
-  gap: 0.5rem;
-  width: fit-content;             
-  margin: 1.5rem auto 0 auto;     
-}
-
-.operator-button {
-  background-color: #ffffff;
-  color: black;
-  font-size: 2.5rem;
-  font-weight: regular;
-  text-align: center;
-  width: 4rem; 
-  height: 4rem;
-  border: none;
-  border-radius: 50%;
-  transition: transform 0.2s ease;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.operator-button:hover {
-  background-color: rgba(255, 255, 255, 0.8);
-  transform: scale(1.05);
-}
-
-.equal-button {
-  background-color: rgba(255, 255, 255, 0.3);
-  color: white;
-  font-size: 2.5rem;
-  font-weight: bold;
-  width: 4rem;
-  height: 4rem;
-  border: none;
-  border-radius: 50%;
-  transition: transform 0.2s ease;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.equal-button:hover {
-  background-color: rgba(255, 255, 255, 0.1);
-  transform: scale(1.05);
-}
-
-
-
-
-/*경계선(배치확인용)
-.title { border: 1px dashed red; }
-.panel-box,.container { border: 1px dashed blue; }
-.history-box,.main-section { border: 1px dashed red; }
-.right-panel,.operator-grid { border: 1px dashed blue; }
-
-
-/*------------------------------------------------------------------
-전체화면 1280px 832px
-
-*/
+  
+  /* ----------------------------------------
+     panel-box (검은 배경 캔버스)
+     ---------------------------------------- */
+  .panel-box {
+    background-color: #1f1f1f;
+    padding: 1rem;
+    border-radius: 1rem;
+    box-shadow: 0 0 10px rgba(0,0,0,0.3);
+    display: flex;
+    flex-direction: column;
+    gap: 0rem;
+    max-width: 28.125rem;
+    width: 100%;
+    height: 40rem;
+    margin-top: auto;
+  }
+  
+  /* 입력창 */
+  .input-area {
+    height: 16.75rem;
+    background-color: #ffffff;
+    border-radius: 1rem 1rem 0 0;
+    border: 1px solid #d1d5db;
+    padding: 1.5rem;
+    font-size: 0.875rem;
+    resize: none;
+    outline: none;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+  }
+  
+  /* 결과창 */
+  .result-box {
+    background-color: #FAFAFA;
+    border: 1px solid #e5e7eb;
+    border-radius: 0 0 1rem 1rem;
+    padding: 1.5rem;
+    height: 8rem;
+    overflow-y: auto;
+    font-size: 1.125rem;
+    color: #374151;
+    text-align: right;
+    width: 100%;
+    box-sizing: border-box;
+    margin: 0;
+    position: relative;
+  }
+  
+  .result-box.empty {
+    color: #9ca3af;
+    text-align: center;
+  }
+  
+  .result-box:hover {
+    background-color: rgba(255, 255, 255, 0.962);
+    text-align: center;
+  }
+  
+  /* 결과 텍스트 블러 처리(hover 시) */
+  .result-box:hover .result-content {
+    display: block;
+    width: 100%;
+    filter: blur(5px);
+  }
+  
+  /* 풀이보기 버튼 (결과 블러 시 중앙에 나타남) */
+  .explanation-button {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 0.5rem;
+    background-color: #ffffff;
+    color: #000000;
+    font-size: 1rem;
+    cursor: pointer;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+    z-index: 1;
+  }
+  
+  .result-box:hover .explanation-button {
+    opacity: 1;
+    pointer-events: auto;
+  }
+  
+  /* ----------------------------------------
+     모달(상세보기)
+     ---------------------------------------- */
+  .modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.3);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  
+  .modal-card {
+    background: #ffffff;
+    height: 628px;
+    width: 788px;
+    border-radius: 1rem;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    padding: 2rem;
+    position: relative;
+  }
+  
+  .modal-header {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 1.5rem;
+  }
+  
+  .close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-color: #383838;
+    color: #ffffff;
+    padding: 0px 10px;
+    min-width: 72px;
+    height: 28px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    cursor: pointer;
+  }
+  
+  .modal-result {
+    position: absolute;
+    top: 96px;
+    left: 53px;
+    width: 683px;
+    height: 69px;
+    background-color: #FAFAFA;
+    border-radius: 10px;
+    box-sizing: border-box;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.125rem;
+    color: #000000;
+    text-align: center;
+    margin: 0;
+  }
+  
+  .modal-divider {
+    position: absolute;
+    top: 207px;
+    width: calc(100% + 4rem);
+    margin-left: -2rem;
+    margin-right: -2rem;
+    height: 1px;
+    background-color: #D9D9D9;
+    border: none;
+  }
+  
+  .modal-body {
+    position: absolute;
+    top: 242px;
+    left: 53px;
+    width: 683px;
+    overflow-y: auto;
+    max-height: 60vh;
+    padding-right: 0.5rem;
+  }
+  
+  .modal-description {
+    position: static;
+    font-size: 0.875rem;
+    color: #000000;
+    white-space: pre-wrap;
+  }
+  
+  /* ----------------------------------------
+     연산자 버튼 (이미지 삽입용) 및 아이콘
+     ---------------------------------------- */
+  /* 1) 연산자 버튼 그리드 배치 */
+  .operator-grid {
+    display: grid;
+    /* 4열 × 3행 형태로 배치 */
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.5rem;
+    width: fit-content;
+    margin: 1.5rem auto 0 auto;
+  }
+  
+  /* 2) 일반 연산자 버튼 (이미지 삽입용) */
+  .operator-button {
+    background-color: #ffffff;
+    width: 4rem;
+    height: 4rem;
+    border: none;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  .operator-button--image {
+    /* 이미지 전용 버튼에만 추가 스타일을 줄 때 사용 */
+  }
+  
+  /* 3) 연산자 버튼 호버 효과 */
+  .operator-button:hover {
+    background-color: rgba(255, 255, 255, 0.8);
+    transform: scale(1.05);
+  }
+  
+  /* 4) 등호(=) 버튼 */
+  .equal-button {
+    background-color: rgba(255, 255, 255, 0.3);
+    width: 4rem;
+    height: 4rem;
+    border: none;
+    border-radius: 50%;
+    transition: transform 0.2s ease;
+    cursor: pointer;
+  
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    overflow: hidden;
+  }
+  
+  .equal-button:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: scale(1.05);
+  }
+  
+  /* 5) 버튼 안 아이콘(<img>) 크기 조절 */
+  .operator-icon {
+    width: 1rem;
+    height: 1rem;
+    object-fit: contain;
+    pointer-events: none;
+  }
+  .operator-empty {
+    width: 4rem;
+    height: 4rem;
+    /* 배경/테두리 등 아무 스타일도 주지 않으면 ‘보이지 않는 빈칸’이 됩니다 */
+  }
+  

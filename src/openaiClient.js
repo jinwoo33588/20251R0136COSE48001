@@ -16,6 +16,7 @@ const TextCalcSchema = z.object({
 });
 
 export const getStructuredOutput = async (inputText) => {
+  
   try {
     const response = await openai.responses.parse({
       model: "gpt-4o-2024-08-06",

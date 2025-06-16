@@ -16,6 +16,8 @@ import PartialIcon from './assets/operators/partial.png';   // ∂ (미분)
 import ResetIcon from './assets/operators/reset.png';           // re(리셋)
 import Equal from './assets/operators/equal.png';   // = (등호)
 
+import  ArrowIcon from './assets/images/arrow.png';
+
 
 /* ─────────────────────────────────────────────────────────────────────────
    operators 배열 정의
@@ -211,12 +213,52 @@ function App() {
 
   const handleDragOver = (e) => {
     e.preventDefault();
+
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    // textarea 안에서 마우스 포인터에 해당하는 문자 인덱스 계산
+    let pos = 0;
+    if (document.caretPositionFromPoint) {
+      // Firefox
+      const { offset, offsetNode } = document.caretPositionFromPoint(e.clientX, e.clientY);
+      if (offsetNode === textarea.firstChild || textarea.contains(offsetNode)) {
+        pos = offset;
+      }
+    } else if (document.caretRangeFromPoint) {
+      // Chrome, Safari
+      const range = document.caretRangeFromPoint(e.clientX, e.clientY);
+      if (range && textarea.contains(range.startContainer)) {
+        pos = range.startOffset;
+      }
+    }
+
+    // 커서 위치 설정
+    textarea.focus();
+    textarea.setSelectionRange(pos, pos);
   };
 
+  // (2) 드롭 시, 현재 커서 위치에 텍스트 삽입
   const handleDrop = (e) => {
     e.preventDefault();
-    const droppedText = e.dataTransfer.getData("text/plain");
-    setInput((prev) => prev + ' ' + droppedText);
+    const droppedText = e.dataTransfer.getData('text/plain');
+
+    const textarea = textareaRef.current;
+    if (!textarea) return;
+
+    const start = textarea.selectionStart;
+    const end   = textarea.selectionEnd;
+    const before = input.slice(0, start);
+    const after  = input.slice(end);
+    const newValue = before + droppedText + after;
+    setInput(newValue);
+
+    // 삽입 위치 바로 뒤로 커서 이동
+    setTimeout(() => {
+      const pos = before.length + droppedText.length;
+      textarea.focus();
+      textarea.setSelectionRange(pos, pos);
+    }, 0);
   };
 
   // ──────────────────────────────────────────────────────────────────────────
@@ -247,15 +289,20 @@ function App() {
 /* ───────────────────────────────────────────────────────────────
      히스토리 오버플로우 여부 계산(useEffect)
      ─────────────────────────────────────────────────────────────── */
-  useEffect(() => {
-    const newMap = {};
-    textRefs.current.forEach((el, idx) => {
-      if (el) {
-        newMap[idx] = el.scrollWidth > el.clientWidth;
-      }
-    });
-    setOverflowedItems(newMap);
-  }, [history]);
+     useEffect(() => {
+       const newMap = {};
+       textRefs.current.forEach((el, idx) => {
+         if (!el) return;
+    
+         // 실제 horizontal overflow 여부
+         const isOverflowing = el.scrollWidth > el.clientWidth;
+    
+         // 펼쳐진 상태(expandedItems[idx] === true)면
+         // overflow 여부와 상관없이 버튼을 유지
+         newMap[idx] = expandedItems[idx] || isOverflowing;
+       });
+       setOverflowedItems(newMap);
+     }, [history, expandedItems]);
 
 /* ───────────────────────────────────────────────────────────────
      히스토리 항목 확장/축소 토글
@@ -302,12 +349,17 @@ function App() {
                 textRefs.current = [];
                 return history.map((item, index) => (
                   <div key={index} className="history-item">
-                    {overflowedItems[index] && (
+                    {(overflowedItems[index]|| expandedItems[index]) && (
                       <button
                         className="expand-button"
                         onClick={() => toggleExpand(index)}
                       >
-                        {expandedItems[index] ? '⬆' : '>'}
+                      <img
+                        src={ArrowIcon}
+                        alt={expandedItems[index] ? '접기' : '펼치기'}
+                        className={`expand-icon ${expandedItems[index] ? 'expanded' : ''}`}
+                      />
+                      
                       </button>
                     )}
 
